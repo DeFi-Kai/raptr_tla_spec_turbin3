@@ -36,7 +36,7 @@ RAPTR achieves agreement through a **prefix voting mechanism**, allowing consens
 The safety of RAPTR is maintained by the **prefix containment property**, which ensures all committed prefixes extend one another. Combined with quorum intersection, this guarantees that every valid proposal extends an already committed prefix, preserving agreement across replicas.
 
 
-## What’s Included
+## What’s Included in the Spec
 
 ### Constants
 - **VAL** – Validators (e.g., `{v1,v2,v3,v4,v5}`)  
@@ -76,7 +76,28 @@ Defines the initial system state:
 
 ---
 
-## Next Steps
+## Reflections & Next Steps
+
+My two biggest challenges were understanding the core idea and math behind consensus and then (2) translating it into TLA. 
+
+
+I learned:
+$n = 3f + 1$
+- This is the minimum number of replicas required to ensure safety in the presence of $f$ Byzantine faults.
+- you need at least $2f + 1$ honest replicas to form a majority. However, to ensure that **any two quorums overlap and this overlap includes at least one honest replica**, the total number of replicas $n$ must be at least $3f + 1$.
+
+Data availability
+- So DA guarantees that when consensus commits a block, **everyone can eventually retrieve the underlying data**.  
+It prevents “data withholding” attacks that could freeze the chain.
+
+| Property         | Role of Data Availability                                                                 |
+| ---------------- | ----------------------------------------------------------------------------------------- |
+| **Safety**       | Prevents committing a block whose data cannot be verified by others.                      |
+| **Liveness**     | Ensures the chain doesn’t halt because a leader or a few nodes withhold transaction data. |
+| **Auditability** | Guarantees anyone can reconstruct and verify the full state from on-chain references.     |
+
+- **Message Delay:** A message delay represents a single round of communication where a message is sent from one replica to a set of other replicas, and those recipients process the message and potentially send a response. 
+
 
 1. **Add actions** to describe state transitions:
    - `Deliver(v,b)` — a batch becomes available to validator `v`
