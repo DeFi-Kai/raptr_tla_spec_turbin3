@@ -20,7 +20,7 @@ RAPTR achieves agreement through a **prefix voting mechanism**, allowing consens
 
 - **Prefix Voting (QC-vote):** Replicas vote on the **longest prefix** of batches they have received, rather than waiting for full data availability. Each vote includes the block hash, round number, and received prefix, enabling progress despite partial data.
 
-- **Forming a QC:** When a replica gathers a quorum of votes, it forms a QC that certifies a prefix of the proposed block. The certified prefix corresponds to the \( S \)-th largest prefix among the votes, where \( S \ge f + 1 \).
+- **Forming a QC:** When a replica gathers a quorum of votes, it forms a QC that certifies a prefix of the proposed block. The certified prefix corresponds to the \( S \)-th largest prefix among the votes, where \( S >= f + 1 \).
 
 - **Voting on a QC (CC-vote):** After receiving a QC, replicas update their highest known QC and issue a **CC-vote** for the certified prefix, including the QC for verification.
 
