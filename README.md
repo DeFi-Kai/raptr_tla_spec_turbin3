@@ -1,4 +1,4 @@
-# Raptr.tla 
+# Raptr TLA spec Turbin3
 
 This TLA+ module defines the **state and structure** for modeling Raptr’s prefix consensus (from the Aptos Raptr paper).
 
