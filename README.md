@@ -12,6 +12,13 @@ Raptr allows prefix voting, to handle cases where some replicas lack data, where
 
 _"Its core innovation lies in integrating the low-latency benefits of leader-based protocols with the high throughput of DAG-based BFT systems—without compromising resilience to adversarial failures or adverse network conditions."_
 
+## Goals
+
+The main goals are:
+1. saefty - it avoids contradictions or violations of correctness.
+2. Liveness - the system eventually does something good and it continues to make progress.
+3. Fault tolerance - measures how many failures or malicious nodes a system can handle while still maintaining safety and liveness (N = 3f + 1).
+
 ## RAPTR Consensus Summary
 
 RAPTR achieves agreement through a **prefix voting mechanism**, allowing consensus to progress even when some data is unavailable. Consensus proceeds in rounds, with each replica advancing based on a valid entry reason.
@@ -76,28 +83,51 @@ Defines the initial system state:
 
 ---
 
-## Reflections & Next Steps
+## Reflections
 
-My two biggest challenges were understanding the core idea and math behind consensus and then (2) translating it into TLA. 
+My two biggest challenges were:  
+1. Understanding the core math and reasoning behind consensus, and  
+2. Translating that logic into a working TLA+ specification.  
 
+---
 
-I learned:
-$n = 3f + 1$
-- This is the minimum number of replicas required to ensure safety in the presence of $f$ Byzantine faults.
-- you need at least $2f + 1$ honest replicas to form a majority. However, to ensure that **any two quorums overlap and this overlap includes at least one honest replica**, the total number of replicas $n$ must be at least $3f + 1$.
+### What I Learned
 
-Data availability
-- So DA guarantees that when consensus commits a block, **everyone can eventually retrieve the underlying data**.  
-It prevents “data withholding” attacks that could freeze the chain.
+**Byzantine Fault Tolerance**
+- The formula $n = 3f + 1$ defines the minimum number of replicas needed to stay safe when up to $f$ of them can behave maliciously.  
+- To form a quorum, at least $2f + 1$ votes are required, which guarantees that **any two quorums overlap by at least one honest replica**.  
+- This overlap is what preserves both safety (no conflicting commits) and liveness (continued progress) under faults.
+
+---
+
+### Data Availability
+Data availability (DA) ensures that when consensus commits a block, **everyone can eventually retrieve the underlying data**.  
+It prevents “data withholding” attacks that could halt or corrupt the chain.
 
 | Property         | Role of Data Availability                                                                 |
 | ---------------- | ----------------------------------------------------------------------------------------- |
 | **Safety**       | Prevents committing a block whose data cannot be verified by others.                      |
-| **Liveness**     | Ensures the chain doesn’t halt because a leader or a few nodes withhold transaction data. |
-| **Auditability** | Guarantees anyone can reconstruct and verify the full state from on-chain references.     |
+| **Liveness**     | Ensures the chain continues even if some nodes or leaders withhold transaction data.      |
+| **Auditability** | Guarantees that anyone can reconstruct and verify the full state from on-chain data.      |
 
-- **Message Delay:** A message delay represents a single round of communication where a message is sent from one replica to a set of other replicas, and those recipients process the message and potentially send a response. 
+---
 
+### Message Delay
+A **message delay** represents a single communication round: one node sends a message to a quorum of others, who then process it and may respond.  
+Each message delay roughly corresponds to one **network hop** in consensus timing (e.g., propose → vote → QC formation).
+
+---
+
+### Consensus Designs
+
+| Design                     | Core Idea                                                                           | Who Proposes Blocks                        |
+| -------------------------- | ----------------------------------------------------------------------------------- | ------------------------------------------ |
+| **Leader-based consensus** | A designated leader (proposer) drives progress for each round; others vote.        | One chosen leader proposes.                |
+| **Leaderless consensus**   | All nodes can propose concurrently, and the protocol merges and orders proposals.  | Everyone proposes in parallel.             |
+
+---
+
+## Next Steps
 
 1. **Add actions** to describe state transitions:
    - `Deliver(v,b)` — a batch becomes available to validator `v`
