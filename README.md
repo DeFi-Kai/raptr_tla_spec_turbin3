@@ -19,6 +19,10 @@ The main goals are:
 2. Liveness - the system eventually does something good and it continues to make progress.
 3. Fault tolerance - measures how many failures or malicious nodes a system can handle while still maintaining safety and liveness (N = 3f + 1).
 
+- **If two quorums overlap in ≥ 1 honest node, they can’t certify conflicting values.**
+- **If a quorum commits a value, every later quorum must extend or include it.**
+- **If the leader eventually behaves and messages get through, a quorum forms and finalizes something.**
+
 ## RAPTR Consensus Summary
 
 RAPTR achieves agreement through a **prefix voting mechanism**, allowing consensus to progress even when some data is unavailable. Consensus proceeds in rounds, with each replica advancing based on a valid entry reason.
@@ -144,3 +148,8 @@ Each message delay roughly corresponds to one **network hop** in consensus timin
 
 3. **Run TLC** to confirm `Init` loads, then extend with actions and invariants.
 
+
+## TLA Resources
+- https://lamport.azurewebsites.net/tla/book-21-07-04.pdf
+- https://cseweb.ucsd.edu/classes/sp05/cse128/
+- https://www.youtube.com/watch?v=p54W-XOIEF8
