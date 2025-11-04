@@ -42,6 +42,7 @@ RAPTR achieves agreement through a **prefix voting mechanism**, allowing consens
 
 The safety of RAPTR is maintained by the **prefix containment property**, which ensures all committed prefixes extend one another. Combined with quorum intersection, this guarantees that every valid proposal extends an already committed prefix, preserving agreement across replicas.
 
+[Whitepaper](https://www.alphaxiv.org/abs/2504.18649)
 
 ## What’s Included in the Spec
 
