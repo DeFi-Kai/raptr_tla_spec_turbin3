@@ -10,6 +10,8 @@ Raptr integrates data availability certification directly into its consensus pro
 
 Raptr allows prefix voting, to handle cases where some replicas lack data, where replicas vote for the portion (prefix) of a block they have received. This ensures consensus can continue even with partial data availability, reducing latency and improving robustness compared to earlier asynchronous quorum store approaches.
 
+_"Its core innovation lies in integrating the low-latency benefits of leader-based protocols with the high throughput of DAG-based BFT systems—without compromising resilience to adversarial failures or adverse network conditions."_
+
 ## RAPTR Consensus Summary
 
 RAPTR achieves agreement through a **prefix voting mechanism**, allowing consensus to progress even when some data is unavailable. Consensus proceeds in rounds, with each replica advancing based on a valid entry reason.
