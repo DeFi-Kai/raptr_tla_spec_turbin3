@@ -1,4 +1,4 @@
-# Raptr.tla — Prefix Consensus Scaffold
+# Raptr.tla 
 
 This TLA+ module defines the **state and structure** for modeling Raptr’s prefix consensus (from the Aptos Raptr paper).
 
